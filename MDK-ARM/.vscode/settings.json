@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "dac.h": "c",
+        "usart.h": "c",
+        "main.h": "c"
+    }
+}

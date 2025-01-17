@@ -41,7 +41,7 @@ extern RCC_PeriphCLKInitTypeDef rcc_periph_clk_init_struct;
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+#define VERSION "0.0.1"
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/

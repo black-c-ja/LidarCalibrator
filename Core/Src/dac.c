@@ -10,7 +10,8 @@
 
 //volatile uint16_t dac_value[10] = {8192, 8055, 7918, 7781, 7644, 7507, 7370, 7233, 7096, 6959};
 volatile uint16_t dac_value[10] = {8192, 7919, 7646, 7373, 7100, 6827, 6554, 6281, 6008, 5735};
-WAVE_STRUCT gWave = {.LengthType = LENGTH_532P, .Type = 0, .Freq = 1000, .Delay = 100};
+uint16_t dac_value2[10] = {8192, 7646, 7096, 6554, 6008, 5462, 4912, 4370, 3824, 3278};
+WAVE_STRUCT gWave = {.Enable = 0, .LengthType = LENGTH_532P, .Type = 0, .Freq = 1000, .Delay = 100};
 
 // 发送数据到DAC904
 void DAC904_WriteData(uint16_t data)
@@ -70,23 +71,26 @@ void delay_us(uint32_t delay)
 
 void DAC_OutputWave(void) {
 	static uint32_t cnt = 0;
-	if(gWave.Type == 0)
-	{
-		if(cnt < gWave.Delay/10)
-			DAC904_WriteData(dac_value[cnt]);
-		else
-			DAC904_WriteData(8192);
+	uint16_t output = 8192;  // Default output value
+
+	if (gWave.Enable) {
+		switch (gWave.Type) {
+			case 0:
+				if (cnt < gWave.Delay/10) output = dac_value[cnt];
+				break;
+			case 1:
+				if (cnt == 0) output = 5735;
+				break;
+			case 2:
+				if (cnt < gWave.Delay/2) output = 5735;
+				break;
+			case 3:
+				if (cnt < gWave.Delay/10) output = dac_value2[cnt];
+				break;
+		}
 	}
-	else if(gWave.Type == 1)
-	{
-		if(cnt == 0)
-			DAC904_WriteData(5735);
-		else
-			DAC904_WriteData(8192);
-	}
-	cnt++;
-	if (cnt >= gWave.Delay) {
-		cnt = 0;
-	}
+
+	DAC904_WriteData(output);
+	cnt = (cnt + 1) >= gWave.Delay ? 0 : cnt + 1;
 }
 

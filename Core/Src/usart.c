@@ -165,8 +165,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   }
 }
 
-void usart_recvwait(void)
-{
+void usart_recvwait(void) {
   if(g_usart1.rxcount > 0)
     g_usart1.rxsta++;
   if(g_usart1.rxsta > 10) {
@@ -198,6 +197,30 @@ LengthType convert_length_to_type(const char* length) {
   } else {
       return LENGTH_UNKNOWN;  // 未知类型
   }
+}
+
+const char* convert_type_to_length(LengthType type) {
+    switch(type) {
+        case LENGTH_355P:
+            return "355P";
+        case LENGTH_355S:
+            return "355S"; 
+        case LENGTH_386:
+            return "386";
+        case LENGTH_407:
+            return "407";
+        case LENGTH_532P:
+            return "532P";
+        case LENGTH_532S:
+            return "532S";
+        case LENGTH_607:
+            return "607";
+        case LENGTH_1064:
+            return "1064";
+        case LENGTH_UNKNOWN:
+        default:
+            return "UNKNOWN";
+    }
 }
 
 void usart1_process(void) {
@@ -233,8 +256,24 @@ void usart1_process(void) {
         printf("ERROR: Unknown command\r\n");
       }
     }
+    else if (strcmp((const char *)g_usart1.rxbuf, "START\r\n") == 0) {
+      gWave.Enable = 1;
+      printf("OK\r\n");
+    }
+    else if (strcmp((const char *)g_usart1.rxbuf, "STOP\r\n") == 0) {
+      gWave.Enable = 0;
+      printf("OK\r\n");
+    }
     else if (strcmp((const char *)g_usart1.rxbuf, "GET STATUS\r\n") == 0) {
-      printf("WAVE:%d|%d|%d,TEMP:0.00\r\n", gWave.LengthType, gWave.Type, gWave.Freq);
+      strcpy(length_str, convert_type_to_length(gWave.LengthType));
+      printf("WAVE:%s,%d;TEMP:0.00\r\n", length_str, gWave.Type);
+    }
+    else if (strcmp((const char *)g_usart1.rxbuf, "GET VERSION\r\n") == 0) {
+      printf("VERSION:%s\r\n", VERSION);
+    }
+    else if (strcmp((const char *)g_usart1.rxbuf, "SOFT RESET\r\n") == 0) {
+      __set_FAULTMASK(1);
+      NVIC_SystemReset();
     }
     else {
       printf("ERROR: Unknown command\r\n");

@@ -201,14 +201,14 @@ LengthType convert_length_to_type(const char* length) {
 }
 
 void usart1_process(void) {
-  int wave_type = 0, freq = 0;
+  int wave_type = 0;
   char length_str[32] = {0};  // 增大缓冲区
   LengthType length_type;
   char *subString;
   if(g_usart1.rxend == 1) {
-    if ((subString = strstr((const char *)g_usart1.rxbuf, "SET WAVE")) != NULL) {
+    if ((subString = strstr((const char *)g_usart1.rxbuf, "SET MODE")) != NULL) {
       // 使用更严格的格式匹配
-      if(sscanf(subString, "SET WAVE:%31[^|]|%d|%d\r\n", length_str, &wave_type, &freq) == 3) {
+      if(sscanf(subString, "SET MODE:%31[^,],%d\r\n", length_str, &wave_type) == 2) {
         // 去除可能的空格
         char *p = length_str;
         while(*p) {
@@ -220,17 +220,17 @@ void usart1_process(void) {
         }
         length_type = convert_length_to_type(length_str);
         if(length_type != LENGTH_UNKNOWN) {
-          if(wave_type >= 0 && wave_type <= 2 && freq > 0 && freq <= 1000) {
-            DAC_CreateWave(length_type, wave_type, freq);
+          if(wave_type >= 1 && wave_type <= 4) {
+            DAC_CreateWave(length_type, wave_type - 1);
             printf("OK\r\n");
           } else {
-            printf("ERROR: Invalid parameters\r\n");
+            printf("ERROR: Unknown mode\r\n");
           }
         } else {
-          printf("ERROR: Unknown length type: %s\r\n", length_str);
+          printf("ERROR: Unknown length: %s\r\n", length_str);
         }
       } else {
-        printf("ERROR: Invalid command format\r\n");
+        printf("ERROR: Unknown command\r\n");
       }
     }
     else if (strcmp((const char *)g_usart1.rxbuf, "GET STATUS\r\n") == 0) {

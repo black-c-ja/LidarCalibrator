@@ -44,7 +44,7 @@ extern WAVE_STRUCT gWave;
 
 void DAC904_WriteData(uint16_t data);
 void DAC904_OutputValue(uint16_t value);
-void DAC_CreateWave(LengthType length, uint8_t type, uint32_t freq);
+void DAC_CreateWave(LengthType length, uint8_t type);
 void DAC_OutputWave(void);
 
 #endif /* INC_DAC904_H_ */

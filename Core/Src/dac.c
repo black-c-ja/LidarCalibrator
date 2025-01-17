@@ -34,12 +34,29 @@ void DAC904_OutputValue(uint16_t value)
     DAC904_WriteData(value);
 }
 
-void DAC_CreateWave(LengthType length, uint8_t type, uint32_t freq) {
+void DAC_CreateWave(LengthType length, uint8_t type) {
 	gWave.LengthType = length;
 	gWave.Type = type;
-	gWave.Freq = freq;
-	gWave.Delay = MAX_US_PER_S / freq / 10;
-	if(gWave.Delay < 10) gWave.Delay = 10;
+	switch(gWave.Type) {
+		case 0:
+			gWave.Freq = 1000;
+			gWave.Delay = 100;
+			break;
+		case 1:
+			gWave.Freq = 1000;
+			gWave.Delay = 100;
+			break;
+		case 2:
+			gWave.Freq = 1000;
+			gWave.Delay = 100;
+			break;
+		case 3:
+			gWave.Freq = 1000;
+			gWave.Delay = 100;
+			break;
+		default:
+			break;
+	}
 }
 
 void delay_us(uint32_t delay)

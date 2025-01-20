@@ -63,8 +63,7 @@ void DAC_CreateWave(LengthType length, uint8_t type) {
 void delay_us(uint32_t delay)
 {
     uint32_t i;
-    for(i = 0; i < delay; i++)
-    {
+    for(i = 0; i < delay; i++) {
         __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
     }
 }

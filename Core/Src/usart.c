@@ -155,8 +155,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 /* USER CODE BEGIN 1 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-  if(huart->Instance == USART1)
-  {
+  if(huart->Instance == USART1) {
     if(g_usart1.rxcount < 127) {
       g_usart1.rxbuf[g_usart1.rxcount++] = g_rx_buffer[0];
     }

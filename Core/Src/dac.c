@@ -8,10 +8,34 @@
 #include "gpio.h"
 #include "dac.h"
 
-//volatile uint16_t dac_value[10] = {8192, 8055, 7918, 7781, 7644, 7507, 7370, 7233, 7096, 6959};
-volatile uint16_t dac_value[10] = {8192, 7919, 7646, 7373, 7100, 6827, 6554, 6281, 6008, 5735};
-uint16_t dac_value2[10] = {8192, 7646, 7096, 6554, 6008, 5462, 4912, 4370, 3824, 3278};
+//volatile uint16_t dac_value[10] = {8192, 8055, 7918, 7781, 7644, 7507, 7370, 7233, 7096, 6959}; // 0~500mV
+//volatile uint16_t dac_value[10] = {8192, 7919, 7646, 7373, 7100, 6827, 6554, 6281, 6008, 5735}; // 0~1000mV
+volatile uint16_t dac_value[10] = {8192, 7782, 7372, 6962, 6552, 6142, 5732, 5322, 4912, 4502}; // 0~1500mV
+uint16_t dac_value2[10] = {8192, 7646, 7096, 6554, 6008, 5462, 4912, 4370, 3824, 3278}; //0~2000mV
 WAVE_STRUCT gWave = {.Enable = 0, .LengthType = LENGTH_532P, .Type = 0, .Freq = 1000, .Delay = 100};
+
+// 将电压值(mV)转换为DAC输出值
+uint16_t Voltage_To_DAC(float voltage_mv) {
+    // 8192对应0V，0对应3000mV
+    // DAC值 = 8192 - (voltage_mv * 8192 / 3000)
+    uint16_t dac_val = 8192 - (uint16_t)((voltage_mv * 8192.0f) / 3000.0f);
+    
+    // 范围保护
+    if(dac_val > 8192) dac_val = 8192;
+    //if(dac_val < 0) dac_val = 0;
+    
+    return dac_val;
+}
+
+// 根据输入电压范围更新DAC数组
+void DAC_UpdateArray(float max_voltage_mv) {
+    float step = max_voltage_mv / 9.0f;  // 分9步
+    
+    for(int i = 0; i < 10; i++) {
+        float current_mv = step * i;
+        dac_value[i] = Voltage_To_DAC(current_mv);
+    }
+}
 
 // 发送数据到DAC904
 void DAC904_WriteData(uint16_t data)
@@ -39,19 +63,19 @@ void DAC_CreateWave(LengthType length, uint8_t type) {
 	gWave.LengthType = length;
 	gWave.Type = type;
 	switch(gWave.Type) {
-		case 0:
+		case TEST_LINEARITY:  // 线性度测试
 			gWave.Freq = 1000;
 			gWave.Delay = 100;
 			break;
-		case 1:
+		case TEST_CROSSTALK:  // 串扰测试
 			gWave.Freq = 1000;
 			gWave.Delay = 100;
 			break;
-		case 2:
+		case TEST_GAINRATIO:  // 增益比测试
 			gWave.Freq = 1000;
 			gWave.Delay = 100;
 			break;
-		case 3:
+		case TEST_DYNAMICRANGE:  // 动态范围测试
 			gWave.Freq = 1000;
 			gWave.Delay = 100;
 			break;
@@ -74,16 +98,16 @@ void DAC_OutputWave(void) {
 
 	if (gWave.Enable) {
 		switch (gWave.Type) {
-			case 0:
+			case TEST_LINEARITY: // 线性度测试
 				if (cnt < gWave.Delay/10) output = dac_value[cnt];
 				break;
-			case 1:
+			case TEST_CROSSTALK: // 串扰测试
 				if (cnt == 0) output = 5735;
 				break;
-			case 2:
+			case TEST_GAINRATIO: // 增益比测试
 				if (cnt < gWave.Delay/2) output = 5735;
 				break;
-			case 3:
+			case TEST_DYNAMICRANGE: // 动态范围测试
 				if (cnt < gWave.Delay/10) output = dac_value2[cnt];
 				break;
 		}

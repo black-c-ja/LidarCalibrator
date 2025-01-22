@@ -9,6 +9,11 @@
 #define INC_DAC904_H_
 
 #define MAX_US_PER_S  1000000
+
+#define TEST_LINEARITY    0
+#define TEST_CROSSTALK    1
+#define TEST_GAINRATIO    2
+#define TEST_DYNAMICRANGE 3
 /*
  * length   LengthType
  * 355P      0
@@ -42,6 +47,7 @@ typedef struct
 	}WAVE_STRUCT;
 extern WAVE_STRUCT gWave;
 
+void DAC_UpdateArray(float max_voltage_mv);
 void DAC904_WriteData(uint16_t data);
 void DAC904_OutputValue(uint16_t value);
 void DAC_CreateWave(LengthType length, uint8_t type);

@@ -227,6 +227,7 @@ void usart1_process(void) {
   char length_str[32] = {0};  // 增大缓冲区
   LengthType length_type;
   char *subString;
+  float dac_val;
   if(g_usart1.rxend == 1) {
     if ((subString = strstr((const char *)g_usart1.rxbuf, "SET MODE")) != NULL) {
       // 使用更严格的格式匹配
@@ -255,6 +256,14 @@ void usart1_process(void) {
         printf("ERROR: Unknown command\r\n");
       }
     }
+    else if ((subString = strstr((const char *)g_usart1.rxbuf, "SET VALUE")) != NULL) {
+      if(sscanf(subString, "SET VALUE:%f\r\n", &dac_val) == 1) {
+        DAC_UpdateArray(dac_val);
+        printf("OK\r\n");
+      } else {
+        printf("ERROR: Unknown command\r\n");
+      }
+    }
     else if (strcmp((const char *)g_usart1.rxbuf, "START\r\n") == 0) {
       gWave.Enable = 1;
       printf("OK\r\n");
@@ -265,7 +274,7 @@ void usart1_process(void) {
     }
     else if (strcmp((const char *)g_usart1.rxbuf, "GET STATUS\r\n") == 0) {
       strcpy(length_str, convert_type_to_length(gWave.LengthType));
-      printf("WAVE:%s,%d;TEMP:0.00\r\n", length_str, gWave.Type);
+      printf("WAVE:%s,%d;TEMP:0.00\r\n", length_str, gWave.Type+1);
     }
     else if (strcmp((const char *)g_usart1.rxbuf, "GET VERSION\r\n") == 0) {
       printf("VERSION:%s\r\n", VERSION);

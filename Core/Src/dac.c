@@ -12,7 +12,7 @@
 //volatile uint16_t dac_value[10] = {8192, 7919, 7646, 7373, 7100, 6827, 6554, 6281, 6008, 5735}; // 0~1000mV
 volatile uint16_t dac_value[10] = {8192, 7782, 7372, 6962, 6552, 6142, 5732, 5322, 4912, 4502}; // 0~1500mV
 uint16_t dac_value2[10] = {8192, 7646, 7096, 6554, 6008, 5462, 4912, 4370, 3824, 3278}; //0~2000mV
-WAVE_STRUCT gWave = {.Enable = 0, .LengthType = LENGTH_532P, .Type = 0, .Freq = 1000, .Delay = 100};
+WAVE_STRUCT gWave = {.Enable = 1, .LengthType = LENGTH_532P, .Type = 0, .Freq = 100, .Delay = 100};
 
 // 将电压值(mV)转换为DAC输出值
 uint16_t Voltage_To_DAC(float voltage_mv) {
@@ -64,19 +64,19 @@ void DAC_CreateWave(LengthType length, uint8_t type) {
 	gWave.Type = type;
 	switch(gWave.Type) {
 		case TEST_LINEARITY:  // 线性度测试
-			gWave.Freq = 1000;
+			gWave.Freq = 100;
 			gWave.Delay = 100;
 			break;
 		case TEST_CROSSTALK:  // 串扰测试
-			gWave.Freq = 1000;
+			gWave.Freq = 100;
 			gWave.Delay = 100;
 			break;
 		case TEST_GAINRATIO:  // 增益比测试
-			gWave.Freq = 1000;
+			gWave.Freq = 100;
 			gWave.Delay = 100;
 			break;
 		case TEST_DYNAMICRANGE:  // 动态范围测试
-			gWave.Freq = 1000;
+			gWave.Freq = 100;
 			gWave.Delay = 100;
 			break;
 		default:
@@ -88,7 +88,7 @@ void delay_us(uint32_t delay)
 {
     uint32_t i;
     for(i = 0; i < delay; i++) {
-        __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
+        __NOP();__NOP();__NOP();__NOP();
     }
 }
 
@@ -99,21 +99,22 @@ void DAC_OutputWave(void) {
 	if (gWave.Enable) {
 		switch (gWave.Type) {
 			case TEST_LINEARITY: // 线性度测试
-				if (cnt < gWave.Delay/10) output = dac_value[cnt];
+				if (cnt < gWave.Freq/10) output = dac_value[cnt];
 				break;
 			case TEST_CROSSTALK: // 串扰测试
 				if (cnt == 0) output = 5735;
 				break;
 			case TEST_GAINRATIO: // 增益比测试
-				if (cnt < gWave.Delay/2) output = 5735;
+				if (cnt < gWave.Freq/2) output = 5735;
 				break;
 			case TEST_DYNAMICRANGE: // 动态范围测试
-				if (cnt < gWave.Delay/10) output = dac_value2[cnt];
+				if (cnt < gWave.Freq/10) output = dac_value2[cnt];
 				break;
 		}
 	}
 
 	DAC904_WriteData(output);
-	cnt = (cnt + 1) >= gWave.Delay ? 0 : cnt + 1;
+	cnt = (cnt + 1) >= gWave.Freq ? 0 : cnt + 1;
+	delay_us(1);
 }
 

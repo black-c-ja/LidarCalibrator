@@ -77,6 +77,18 @@ void MX_USART1_UART_Init(void)
   {
     Error_Handler();
   }
+  if (HAL_UARTEx_SetTxFifoThreshold(&huart1, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetRxFifoThreshold(&huart1, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_DisableFifoMode(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
   /* USER CODE BEGIN USART1_Init 2 */
   HAL_UART_Receive_IT(&huart1, (uint8_t *)g_rx_buffer, 1);
   /* USER CODE END USART1_Init 2 */

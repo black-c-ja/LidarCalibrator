@@ -1284,11 +1284,11 @@ ARM Macro Assembler    Page 20
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M7.fp.dp --apcs=
 interwork --depend=lidarcalibrator\startup_stm32h750xx.d -olidarcalibrator\star
-tup_stm32h750xx.o -I../Core/Inc -I.\RTE\_LidarCalibrator -ID:\MDK5.36\Packs\ARM
-\CMSIS\5.8.0\CMSIS\Core\Include -ID:\MDK5.36\Packs\Keil\STM32H7xx_DFP\3.1.0\Dri
-vers\CMSIS\Device\ST\STM32H7xx\Include --predefine="__UVISION_VERSION SETA 536"
- --predefine="_RTE_ SETA 1" --predefine="STM32H750xx SETA 1" --predefine="_RTE_
- SETA 1" --list=startup_stm32h750xx.lst startup_stm32h750xx.s
+tup_stm32h750xx.o -I.\RTE\_LidarCalibrator -ID:\MDK5.36\Packs\ARM\CMSIS\5.8.0\C
+MSIS\Core\Include -ID:\MDK5.36\Packs\Keil\STM32H7xx_DFP\3.1.0\Drivers\CMSIS\Dev
+ice\ST\STM32H7xx\Include --predefine="__UVISION_VERSION SETA 536" --predefine="
+_RTE_ SETA 1" --predefine="STM32H750xx SETA 1" --predefine="_RTE_ SETA 1" --lis
+t=startup_stm32h750xx.lst startup_stm32h750xx.s
 
 
 

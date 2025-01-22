@@ -6,18 +6,13 @@
                 "d:\\GBQ\\CODE\\LidarCalibrator\\Core\\Inc",
                 "d:\\GBQ\\CODE\\LidarCalibrator\\Drivers\\STM32H7xx_HAL_Driver\\Inc",
                 "d:\\GBQ\\CODE\\LidarCalibrator\\Drivers\\STM32H7xx_HAL_Driver\\Inc\\Legacy",
-                "d:\\GBQ\\CODE\\LidarCalibrator\\Middlewares\\Third_Party\\FreeRTOS\\Source\\include",
-                "d:\\GBQ\\CODE\\LidarCalibrator\\Middlewares\\Third_Party\\FreeRTOS\\Source\\CMSIS_RTOS_V2",
-                "d:\\GBQ\\CODE\\LidarCalibrator\\Middlewares\\Third_Party\\FreeRTOS\\Source\\portable\\RVDS\\ARM_CM4F",
                 "d:\\GBQ\\CODE\\LidarCalibrator\\Drivers\\CMSIS\\Device\\ST\\STM32H7xx\\Include",
                 "d:\\GBQ\\CODE\\LidarCalibrator\\Drivers\\CMSIS\\Include",
                 "D:\\MDK5.36\\ARM\\ARMCC\\include",
                 "D:\\MDK5.36\\ARM\\ARMCC\\include\\rw",
                 "d:\\GBQ\\CODE\\LidarCalibrator\\MDK-ARM",
                 "d:\\GBQ\\CODE\\LidarCalibrator\\Core\\Src",
-                "d:\\GBQ\\CODE\\LidarCalibrator\\Drivers\\STM32H7xx_HAL_Driver\\Src",
-                "d:\\GBQ\\CODE\\LidarCalibrator\\Middlewares\\Third_Party\\FreeRTOS\\Source",
-                "d:\\GBQ\\CODE\\LidarCalibrator\\Middlewares\\Third_Party\\FreeRTOS\\Source\\portable\\MemMang"
+                "d:\\GBQ\\CODE\\LidarCalibrator\\Drivers\\STM32H7xx_HAL_Driver\\Src"
             ],
             "defines": [
                 "USE_PWR_LDO_SUPPLY",

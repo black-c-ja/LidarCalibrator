@@ -8,6 +8,8 @@
 #include "gpio.h"
 #include "dac.h"
 
+#define DAC904_BASE_ADDR  (0x60000000) // Bank1起始地址
+volatile uint16_t *dac904 = (volatile uint16_t*)DAC904_BASE_ADDR;
 //volatile uint16_t dac_value[10] = {8192, 8055, 7918, 7781, 7644, 7507, 7370, 7233, 7096, 6959}; // 0~500mV
 //volatile uint16_t dac_value[10] = {8192, 7919, 7646, 7373, 7100, 6827, 6554, 6281, 6008, 5735}; // 0~1000mV
 volatile uint16_t dac_value[10] = {8192, 7782, 7372, 6962, 6552, 6142, 5732, 5322, 4912, 4502}; // 0~1500mV
@@ -40,16 +42,16 @@ void DAC_UpdateArray(float max_voltage_mv) {
 // 发送数据到DAC904
 void DAC904_WriteData(uint16_t data)
 {
-    //*(__IO uint16_t *)(0x60000000) = data;
-	GPIOC->BSRR = (0x1 << (3 + 16));
-	GPIOE->ODR = data;
-	if (data & 0x0004) {
-		GPIOD->BSRR = (0x1 << 7);
-	} else {
-		GPIOD->BSRR = (0x1 << (7 + 16));
-	}
-	__NOP();__NOP();
-	GPIOC->BSRR = (0x1 << 3);
+    *dac904 = data; // 写入数据，触发FMC写时序
+	// GPIOC->BSRR = (0x1 << (3 + 16));
+	// GPIOE->ODR = data;
+	// if (data & 0x0004) {
+	// 	GPIOD->BSRR = (0x1 << 7);
+	// } else {
+	// 	GPIOD->BSRR = (0x1 << (7 + 16));
+	// }
+	// __NOP();__NOP();
+	// GPIOC->BSRR = (0x1 << 3);
 }
 
 // DAC904输出电压
@@ -105,7 +107,7 @@ void DAC_OutputWave(void) {
 				if (cnt == 0) output = 5735;
 				break;
 			case TEST_GAINRATIO: // 增益比测试
-				if (cnt < gWave.Freq/2) output = 5735;
+				if (cnt == 0) output = 5735;
 				break;
 			case TEST_DYNAMICRANGE: // 动态范围测试
 				if (cnt < gWave.Freq/10) output = dac_value2[cnt];
